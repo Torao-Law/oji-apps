@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import { UserContext } from "./Context/UserContext";
-import { API, setAuthToken } from "./Config/api";
+import { API, setAuthToken } from "./Config/Api";
 
 import Navigasi from "./Components/Navigasi";
 import Home from "./Pages/Home";
@@ -12,57 +12,35 @@ import PrivateRoute from "./PrivateRoute/PrivateRoute";
 import AddTicket from "./Pages/addTicket";
 import Approved from "./Pages/approved";
 
-// if (localStorage.getItem("token")) {
-//   setAuthToken(localStorage.getItem("token"));
-// }
-
 function App() {
   let navigate = useNavigate();
 
   const [state, dispatch] = useContext(UserContext);
-  // const [isLoading, setIsLoading] = useState(null);
+  const [isLoading, setIsLoading] = useState(null);
 
   useEffect(() => {
     if (localStorage.token) {
-      setAuthToken(localStorage.getItem("token"));
+      setAuthToken(localStorage.token);
       checkUser();
+    } else {
+      setIsLoading(false);
     }
-    // } else {
-    //   setIsLoading(false);
-    // }
   }, []);
 
   useEffect(() => {
-    checkUser();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  // useEffect(() => {
-  //   if (!isLoading) {
-  //     if (state.isLogin === false) {
-  //       navigate("/");
-  //     }
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [isLoading]);
+    if (!isLoading) {
+      if (state.isLogin === false) {
+        navigate("/");
+      }
+    }
+  }, [isLoading]);
 
   const checkUser = async () => {
-    // if (localStorage.getItem("token")) {
-    //   setAuthToken(localStorage.getItem("token"));
-    //   // checkUser();
-    // }
     try {
-      const config = {
-        method: "GET",
-        headers: {
-          Authorization: "Basic " + localStorage.token,
-        },
-      };
-      const response = await API.get("/check-auth", config);
-      // const response = await API.get("/check-auth");
+      const response = await API.get("/check-auth");
       console.log("Check user success : ", response);
 
-      let payload = response.data.data;
+      let payload = response?.data?.data;
 
       payload.token = localStorage.token;
       console.log(payload.token);
@@ -72,21 +50,20 @@ function App() {
         user: payload,
       });
 
-      // setAuthToken(payload.token);
-      // setIsLoading(false);
+      setIsLoading(false);
     } catch (error) {
       console.log("Check user failed : ", error);
       dispatch({
         type: "AUTH_ERROR",
       });
-      // setIsLoading(false);
+      setIsLoading(false);
     }
   };
 
   return (
     <div className="App">
       <Navigasi />
-      {/* {isLoading ? null : ( */}
+      {isLoading ? null : (
       <Routes>
         <Route path="/" element={<Home />} />
         <Route exact path="/" element={<PrivateRoute />} />
@@ -96,7 +73,7 @@ function App() {
         <Route path="/addticket" element={<AddTicket />} />
         <Route path="/tiketApproved" element={<Approved />} />
       </Routes>
-      {/* )} */}
+      )}
     </div>
   );
 }

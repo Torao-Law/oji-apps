@@ -1,5 +1,5 @@
 import { useMutation } from "react-query";
-import { API } from "../../Config/api";
+import { API } from "../../Config/Api";
 
 import { Container } from "react-bootstrap";
 import { Modal } from "react-bootstrap";

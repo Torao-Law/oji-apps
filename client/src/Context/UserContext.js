@@ -11,16 +11,18 @@ const reducer = (state, action) => {
   const { type, payload } = action;
 
   switch (type) {
-    case "USER_SUCCESS":
-    case "LOGIN_SUCCESS":
-      localStorage.setItem("token", JSON.stringify(payload.token));
+    case 'LOGIN_SUCCESS':
+    case 'USER_SUCCESS':
+      if (payload && payload.token) {
+        localStorage.setItem('token', payload.token);
+      }
       return {
         isLogin: true,
         user: payload,
       };
-    case "AUTH_ERROR":
-    case "LOGOUT":
-      localStorage.removeItem("token");
+    case 'AUTH_ERROR':
+    case 'LOGOUT':
+      localStorage.removeItem('token');
       return {
         isLogin: false,
         user: {},
@@ -33,5 +35,9 @@ const reducer = (state, action) => {
 export const UserContextProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  return <UserContext.Provider value={[state, dispatch]}>{children}</UserContext.Provider>;
+  return (
+    <UserContext.Provider value={[state, dispatch]}>
+      {children}
+    </UserContext.Provider>
+  );
 };

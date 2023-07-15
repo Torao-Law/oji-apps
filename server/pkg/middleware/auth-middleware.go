@@ -60,17 +60,18 @@ type Result struct {
 func Auth(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		token := c.Request().Header.Get("Authorization")
-		fmt.Println(token)
+		// fmt.Println(token)
 
 		if token == "" {
-			return c.JSON(http.StatusUnauthorized, dto.ErrorResult{Code: http.StatusBadRequest, Message: "unauthorized"})
+			return c.JSON(http.StatusBadRequest, dto.ErrorResult{Code: http.StatusBadRequest, Message: "unauthorized xxxx"})
 		}
 
-		token = strings.Split(token, " ")[1]
-		claims, err := jwtToken.DecodeToken(token)
+		tokens := strings.Split(token, " ")[1]
+		fmt.Println(tokens)
+		claims, err := jwtToken.DecodeToken(tokens)
 
 		if err != nil {
-			return c.JSON(http.StatusUnauthorized, Result{Code: http.StatusUnauthorized, Message: "unathorized"})
+			return c.JSON(http.StatusUnauthorized, Result{Code: http.StatusUnauthorized, Message: "unathorized porn"})
 		}
 
 		c.Set("userLogin", claims)

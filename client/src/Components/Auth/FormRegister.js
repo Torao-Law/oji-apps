@@ -1,5 +1,5 @@
 import { useMutation } from "react-query";
-import { API } from "../../Config/api";
+import { API } from "../../Config/Api";
 import { useState } from "react";
 // import bootstrap
 import { Container } from "react-bootstrap";

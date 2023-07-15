@@ -12,7 +12,7 @@ import (
 	"time"
 
 	"github.com/go-playground/validator/v10"
-	"github.com/golang-jwt/jwt/v4"
+	"github.com/golang-jwt/jwt/v5"
 	"github.com/labstack/echo/v4"
 )
 
@@ -24,10 +24,10 @@ func HandlerAuth(AuthRepository repositories.AuthRepository) *handlerAuth {
 	return &handlerAuth{AuthRepository}
 }
 
-func (h *handlerAuth) CreateUser(c echo.Context) error{
+func (h *handlerAuth) CreateUser(c echo.Context) error {
 	request := new(authdto.CreateAuthRequest)
 	if err := c.Bind(request); err != nil {
-		return c.JSON(http.StatusBadRequest, dto.ErrorResult{Code : http.StatusBadRequest, Message: err.Error()})
+		return c.JSON(http.StatusBadRequest, dto.ErrorResult{Code: http.StatusBadRequest, Message: err.Error()})
 	}
 
 	validation := validator.New()
@@ -43,14 +43,14 @@ func (h *handlerAuth) CreateUser(c echo.Context) error{
 	}
 
 	user := models.User{
-		Fullname: request.Fullname,
-		Username: request.Username,
-		Email: request.Email,
-		Password: password,
+		Fullname:     request.Fullname,
+		Username:     request.Username,
+		Email:        request.Email,
+		Password:     password,
 		JenisKelamin: request.JenisKelamin,
-		Telepon: request.Telepon,
-		Alamat: request.Alamat,
-		Role: "user",
+		Telepon:      request.Telepon,
+		Alamat:       request.Alamat,
+		Role:         "user",
 	}
 
 	data, err := h.AuthRepository.CreateUser(user)
@@ -59,13 +59,13 @@ func (h *handlerAuth) CreateUser(c echo.Context) error{
 		return c.JSON(http.StatusInternalServerError, dto.ErrorResult{Code: http.StatusInternalServerError, Message: err.Error()})
 	}
 
-	return c.JSON(http.StatusOK, dto.SuccessResult{Code: http.StatusOK, Data: data })
+	return c.JSON(http.StatusOK, dto.SuccessResult{Code: http.StatusOK, Data: data})
 
 }
 
 func (h *handlerAuth) Login(c echo.Context) error {
 	request := new(authdto.LoginRequest)
-	if err:= c.Bind(request); err != nil {
+	if err := c.Bind(request); err != nil {
 		return c.JSON(http.StatusBadRequest, dto.ErrorResult{Code: http.StatusBadRequest, Message: err.Error()})
 	}
 
@@ -98,7 +98,7 @@ func (h *handlerAuth) Login(c echo.Context) error {
 
 	loginResponse := authdto.LoginResponse{
 		Username: user.Username,
-		Token: token,
+		Token:    token,
 	}
 
 	return c.JSON(http.StatusOK, dto.SuccessResult{Code: http.StatusOK, Data: loginResponse})

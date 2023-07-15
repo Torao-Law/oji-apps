@@ -64,7 +64,7 @@ function Navigasi(props) {
                 </>
               ) : state.isLogin ? (
                 <>
-                  <p className={cssModules.user}>{state.user.username}</p>
+                  <p className={cssModules.user}>{state?.user?.username}</p>
                   <Dropdown>
                     <Dropdown.Toggle style={{ background: "none", border: "none" }}>
                       <Image src="../assets/img/boy 1.png" className="border border-4 rounded-circle" style={{ width: "40px", height: "40px", marginTop: "0.6rem", cursor: "pointer" }} />
